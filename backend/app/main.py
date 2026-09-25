@@ -50,15 +50,34 @@ app.include_router(history_router, prefix=api_v1)
 app.include_router(feedback_router, prefix=api_v1)
 app.include_router(admin_router, prefix=api_v1)
 
-@app.get("/")
-def root():
-    return {
-        "project": "MusicMind AI",
-        "tagline": "AI-Based Age-Wise Music Recommendation System",
-        "status": "online",
-        "version": settings.VERSION,
-        "docs_url": "/docs"
-    }
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist"))
+if os.path.exists(frontend_dist):
+    assets_dir = os.path.join(frontend_dist, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/{full_path:path}")
+    async def serve_spa(full_path: str):
+        if full_path.startswith("api") or full_path in ["docs", "redoc", "openapi.json"]:
+            return None
+        file_path = os.path.join(frontend_dist, full_path)
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+        return FileResponse(os.path.join(frontend_dist, "index.html"))
+else:
+    @app.get("/")
+    def root():
+        return {
+            "project": "MusicMind AI",
+            "tagline": "AI-Based Age-Wise Music Recommendation System",
+            "status": "online",
+            "version": settings.VERSION,
+            "docs_url": "/docs"
+        }
 
 @app.get("/api/health")
 def health_check():
