@@ -1,5 +1,12 @@
 import os
+import sys
 import csv
+
+# Ensure backend root is always in sys.path
+_backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if _backend_dir not in sys.path:
+    sys.path.insert(0, _backend_dir)
+
 from sqlalchemy.orm import Session
 from app.db.session import engine, Base, SessionLocal
 from app.models.models import (

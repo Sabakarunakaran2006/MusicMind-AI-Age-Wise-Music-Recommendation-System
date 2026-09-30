@@ -29,7 +29,7 @@ Fill in the fields exactly as follows:
 | **Root Directory** | *(leave empty)* |
 | **Runtime** | `Python 3` |
 | **Build Command** | `npm --prefix frontend install && npm --prefix frontend run build && pip install -r backend/requirements.txt && python -m backend.app.db.seed` |
-| **Start Command** | `cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT` |
+| **Start Command** | `uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT` |
 | **Instance Type** | `Free` |
 
 ### Step 4: Add Environment Variables

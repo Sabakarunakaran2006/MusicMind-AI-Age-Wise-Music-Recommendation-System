@@ -1,6 +1,6 @@
 services:
   # -------------------------------------------------------------
-  # OPTION 1 (Recommended): Single Full-Stack Web Service on Render Free Tier
+  # Single Full-Stack Web Service on Render Free Tier
   # -------------------------------------------------------------
   - type: web
     name: musicmind-ai
@@ -8,7 +8,7 @@ services:
     region: oregon
     plan: free
     buildCommand: "npm --prefix frontend install && npm --prefix frontend run build && pip install -r backend/requirements.txt && python -m backend.app.db.seed"
-    startCommand: "cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    startCommand: "uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port $PORT"
     envVars:
       - key: SECRET_KEY
         generateValue: true
